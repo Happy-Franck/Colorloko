@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ColorLoko - Générateur de Palettes de Couleurs
 
-## Getting Started
+ColorLoko est un outil puissant pour générer des palettes de couleurs harmonieuses à partir d'une couleur de base. Idéal pour les designers, développeurs et créateurs de contenu qui ont besoin de créer des palettes de couleurs cohérentes pour leurs projets.
 
-First, run the development server:
+## Fonctionnalités
+
+- Sélection de couleur intuitive avec un color picker visuel
+- Saisie manuelle de codes hexadécimaux
+- Génération de 6 types de palettes différentes :
+  - Monochrome : variations d'une seule couleur
+  - Complémentaire : couleurs opposées sur le cercle chromatique
+  - Triade : trois couleurs équidistantes sur le cercle chromatique
+  - Tétrade : quatre couleurs formant un rectangle sur le cercle chromatique
+  - Analogique : couleurs adjacentes sur le cercle chromatique
+  - Nuances : variations de saturation et luminosité
+- Copie rapide des codes couleur
+- Export des palettes au format JSON
+- Interface responsive et support du mode sombre
+
+## Installation
+
+```bash
+# Cloner le dépôt
+git clone https://github.com/Happy-Franck/colorloko.git
+cd colorloko
+
+# Installer les dépendances
+npm install
+```
+
+## Utilisation
+
+### Mode Développement
+
+Pour lancer le projet en mode développement avec les outils de développement :
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Puis ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Mode Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Pour lancer le projet en mode production sans les outils de développement :
 
-## Learn More
+```bash
+# Construire le projet
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Démarrer le serveur de production
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Puis ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Intégration du Composant
 
-## Deploy on Vercel
+Vous pouvez facilement intégrer le générateur de palettes de couleurs dans n'importe quelle page de votre application Next.js :
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```tsx
+"use client";
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+import { ColorPaletteGenerator } from "@/components/color-palette";
+
+export default function MaPage() {
+  return (
+    <div>
+      <ColorPaletteGenerator 
+        initialColor="#3B82F6" // Couleur initiale (optionnel)
+        onPaletteSelect={(palette) => {
+          // Faire quelque chose avec la palette sélectionnée
+          console.log(palette);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Propriétés du Composant
+
+| Propriété | Type | Description | Par défaut |
+|-----------|------|-------------|------------|
+| `initialColor` | `string` | Couleur initiale au format hexadécimal | `"#3B82F6"` |
+| `onPaletteSelect` | `(palette: ColorPalette) => void` | Callback appelé lorsqu'une palette est sélectionnée | `undefined` |
+
+## Captures d'écran
+
+![ColorLoko - Générateur de Palettes de Couleurs](public/screenshot.png)
+
+## Technologies Utilisées
+
+- [Next.js](https://nextjs.org/) - Framework Next.JS
+- [React Colorful](https://github.com/omgovich/react-colorful) - Sélecteur de couleur
+- [Chroma.js](https://gka.github.io/chroma.js/) - Manipulation des couleurs
+- [Tailwind CSS](https://tailwindcss.com/) - Styles
+- [Lucide Icons](https://lucide.dev/) - Icônes
+

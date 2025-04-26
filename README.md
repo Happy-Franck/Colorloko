@@ -67,9 +67,8 @@ export default function MaPage() {
   return (
     <div>
       <ColorPaletteGenerator 
-        initialColor="#3B82F6" // Couleur initiale (optionnel)
+        initialColor="#3B82F6" 
         onPaletteSelect={(palette) => {
-          // Faire quelque chose avec la palette sélectionnée
           console.log(palette);
         }}
       />

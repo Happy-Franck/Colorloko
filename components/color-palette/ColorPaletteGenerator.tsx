@@ -304,12 +304,12 @@ export function ColorPaletteGenerator({
                       <Download className="h-4 w-4" />
                     </Button>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 h-10 overflow-hidden">
                     {palette.description}
                   </p>
 
                   <div className="relative rounded-2xl bg-gray-100 dark:bg-gray-900 p-1 flex-1">
-                    <div className="flex h-64 flex-col overflow-hidden rounded-2xl">
+                    <div className="flex h-60 flex-col overflow-hidden rounded-2xl">
                       {palette.colors.map((color, index) => (
                         <div
                           key={index}
@@ -318,7 +318,7 @@ export function ColorPaletteGenerator({
                             copyColor(color, palette.name);
                           }}
                           style={{ backgroundColor: color }}
-                          className="relative flex flex-1 min-h-[48px] items-center justify-center"
+                          className="relative flex h-12 items-center justify-center"
                         >
                           <span className="text-xs font-semibold tracking-wide text-white">
                             {color}

@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" suppressHydrationWarning>
-      <body className="bg-white dark:bg-gray-900 min-h-screen flex flex-col">
+      <body suppressHydrationWarning className="bg-white dark:bg-gray-900 min-h-screen flex flex-col">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

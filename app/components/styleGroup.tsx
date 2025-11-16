@@ -143,41 +143,63 @@ export function StyleGroup({ selectedColor }: StyleGroupProps) {
     
 
     return (
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {styles.map((style, groupIndex) => (
-                <div key={groupIndex} className="p-8 rounded-xl bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl">
-                    <div className="flex items-center justify-between mb-6">
-                        <h4 className="text-xl font-semibold">{style.name}</h4>
+                <div
+                    key={groupIndex}
+                    className="flex flex-col items-center gap-3"
+                >
+                    <div className="flex items-center justify-between w-full px-1 text-xs font-medium text-gray-400 dark:text-gray-500">
+                        <span>{String(groupIndex + 1).padStart(2, "0")}</span>
+                        <span className="uppercase tracking-wide text-[0.65rem]">{style.name}</span>
                         <button
                             onClick={() => handleDownload(style)}
-                            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                            title="Télécharger la palette"
+                            className="inline-flex items-center justify-center rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                            title="Télécharger la palette ok"
                         >
-                            <Download className="h-5 w-5" />
+                            <Download className="h-3 w-3" />
                         </button>
                     </div>
-                    <div className="flex flex-col gap-2">
-                        {style.colors.map((color, index) => {
-                            const colorId = `${style.name}-${index}`;
-                            return (
-                                <div key={index} className="flex items-center gap-4">
-                                    <div 
-                                        className="w-full h-[30px] rounded-lg transition-transform hover:scale-105 cursor-pointer relative"
-                                        style={{ backgroundColor: color }}
+                    <div className="w-full rounded-3xl bg-gray-100/80 dark:bg-gray-900/70 p-3 shadow-md shadow-gray-200/80 dark:shadow-black/40 transition-transform duration-200 hover:-translate-y-1">
+                        <div className="flex flex-col overflow-hidden rounded-2xl">
+                            {style.colors.map((color, index) => {
+                                const colorId = `${style.name}-${index}`;
+                                const textColor = chroma.contrast(color, "white") > 4.5 ? "#FFFFFF" : "#111827";
+                                const isFirst = index === 0;
+                                const isLast = index === style.colors.length - 1;
+                                return (
+                                    <button
+                                        key={index}
+                                        type="button"
                                         onClick={() => handleCopyColor(color, colorId)}
+                                        className="relative w-full h-12 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-100 focus-visible:ring-gray-300 dark:focus-visible:ring-offset-gray-900 dark:focus-visible:ring-gray-600 transition-transform duration-150 hover:scale-[1.01]"
+                                        style={{
+                                            backgroundColor: color,
+                                            borderTopLeftRadius: isFirst ? 16 : 0,
+                                            borderTopRightRadius: isFirst ? 16 : 0,
+                                            borderBottomLeftRadius: isLast ? 16 : 0,
+                                            borderBottomRightRadius: isLast ? 16 : 0,
+                                            color: textColor,
+                                        }}
                                     >
+                                        <span className="pointer-events-none select-none text-xs font-mono tracking-wide">
+                                            {color.toUpperCase()}
+                                        </span>
                                         {copiedColorId === colorId && (
                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <span className="text-sm font-mono px-2 py-1 rounded bg-white/90 dark:bg-gray-800/90 shadow-sm">Copié !</span>
+                                                <span className="text-[0.65rem] font-mono px-2 py-1 rounded-full bg-white/90 text-gray-900 shadow-sm">
+                                                    Copié !
+                                                </span>
                                             </div>
                                         )}
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             ))}
         </div>
     );
-} 
+}
+ 

@@ -93,52 +93,74 @@ export function ColorPaletteGenerator({
       let colors: string[] = [];
 
       switch (style.name) {
-        case "Monochrome":
+        case "Monochrome": {
           colors = [
-            baseColor.hex(),
             baseColor.darken(1.5).hex(),
             baseColor.darken(0.75).hex(),
+            baseColor.hex(),
             baseColor.brighten(0.75).hex(),
             baseColor.brighten(1.5).hex(),
           ];
           break;
-        case "Complémentaire":
+        }
+        case "Complémentaire": {
+          const complementary = baseColor.set("hsl.h", (h + 180) % 360);
           colors = [
+            baseColor.brighten(0.8).hex(),
             baseColor.hex(),
-            baseColor.set("hsl.h", (h + 180) % 360).hex(),
+            baseColor.darken(0.8).hex(),
+            complementary.hex(),
+            complementary.darken(0.8).hex(),
           ];
           break;
-        case "Triade":
+        }
+        case "Triade": {
+          const triad1 = baseColor.set("hsl.h", (h + 120) % 360);
+          const triad2 = baseColor.set("hsl.h", (h + 240) % 360);
           colors = [
+            baseColor.brighten(0.8).hex(),
             baseColor.hex(),
-            baseColor.set("hsl.h", (h + 120) % 360).hex(),
-            baseColor.set("hsl.h", (h + 240) % 360).hex(),
+            triad1.hex(),
+            triad2.hex(),
+            triad2.darken(0.8).hex(),
           ];
           break;
-        case "Tétrade":
+        }
+        case "Tétrade": {
+          const c2 = baseColor.set("hsl.h", (h + 90) % 360);
+          const c3 = baseColor.set("hsl.h", (h + 180) % 360);
+          const c4 = baseColor.set("hsl.h", (h + 270) % 360);
           colors = [
             baseColor.hex(),
-            baseColor.set("hsl.h", (h + 90) % 360).hex(),
-            baseColor.set("hsl.h", (h + 180) % 360).hex(),
-            baseColor.set("hsl.h", (h + 270) % 360).hex(),
+            c2.hex(),
+            c3.hex(),
+            c4.hex(),
+            baseColor.brighten(0.9).hex(),
           ];
           break;
-        case "Analogique":
+        }
+        case "Analogique": {
+          const a1 = baseColor.set("hsl.h", (h - 30 + 360) % 360);
+          const a2 = baseColor.set("hsl.h", (h + 30) % 360);
           colors = [
-            baseColor.set("hsl.h", (h - 30 + 360) % 360).hex(),
+            baseColor.darken(0.7).hex(),
+            a1.hex(),
             baseColor.hex(),
-            baseColor.set("hsl.h", (h + 30) % 360).hex(),
+            a2.hex(),
+            baseColor.brighten(0.7).hex(),
           ];
           break;
-        case "Nuances":
+        }
+        case "Nuances": {
           colors = [
-            baseColor.hex(),
-            baseColor.set("hsl.s", Math.max(0, s - 0.3)).hex(),
-            baseColor.set("hsl.s", Math.min(1, s + 0.3)).hex(),
             baseColor.set("hsl.l", Math.max(0, l - 0.3)).hex(),
+            baseColor.set("hsl.s", Math.max(0, s - 0.3)).hex(),
+            baseColor.hex(),
+            baseColor.set("hsl.s", Math.min(1, s + 0.3)).hex(),
             baseColor.set("hsl.l", Math.min(1, l + 0.3)).hex(),
           ];
           break;
+        }
       }
 
       return {
@@ -195,8 +217,8 @@ export function ColorPaletteGenerator({
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="w-full max-w-6xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] gap-10 items-start">
         {/* Sélecteur de couleur */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Sélectionnez une couleur</h2>
@@ -252,57 +274,64 @@ export function ColorPaletteGenerator({
         {/* Palettes générées */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">Palettes générées</h2>
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
             {generatedPalettes.map((palette) => (
               <div
                 key={palette.name}
                 onClick={() => {
-                    setSelectedPalette(palette);
-                    onPaletteSelect?.(palette);
-                  }}
-                className={`p-4 rounded-lg border ${
+                  setSelectedPalette(palette);
+                  onPaletteSelect?.(palette);
+                }}
+                className={`group cursor-pointer rounded-3xl border shadow-sm h-[360px] ${
                   selectedPalette?.name === palette.name
                     ? "border-blue-500 dark:border-blue-400"
                     : "border-gray-200 dark:border-gray-700"
                 }`}
               >
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="font-medium">{palette.name}</h3>
-                  <div className="flex gap-2">
+                <div className="flex flex-col h-full p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-sm tracking-wide">
+                      {palette.name}
+                    </h3>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => downloadPalette(palette)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        downloadPalette(palette);
+                      }}
                     >
-                      <Download className="h-4 w-4 mr-1" />
-                      Télécharger
+                      <Download className="h-4 w-4" />
                     </Button>
                   </div>
-                </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  {palette.description}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {palette.colors.map((color, index) => (
-                    <div
-                      key={index}
-                      className="group relative"
-                      onClick={() => copyColor(color, palette.name)}
-                    >
-                      <div
-                        className="w-12 h-12 rounded-md shadow-sm cursor-pointer transition-transform hover:scale-105"
-                        style={{ backgroundColor: color }}
-                      />
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        {color}
-                      </div>
-                      {copiedColor === color && copiedPaletteName === palette.name && (
-                        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 px-2 py-1 rounded shadow-lg text-xs font-medium">
-                          Copié
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+                    {palette.description}
+                  </p>
+
+                  <div className="relative rounded-2xl bg-gray-100 dark:bg-gray-900 p-1 flex-1">
+                    <div className="flex h-64 flex-col overflow-hidden rounded-2xl">
+                      {palette.colors.map((color, index) => (
+                        <div
+                          key={index}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyColor(color, palette.name);
+                          }}
+                          style={{ backgroundColor: color }}
+                          className="relative flex flex-1 min-h-[48px] items-center justify-center"
+                        >
+                          <span className="text-xs font-semibold tracking-wide text-white">
+                            {color}
+                          </span>
+                          {copiedColor === color && copiedPaletteName === palette.name && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/35 text-[10px] font-semibold uppercase tracking-wide text-white">
+                              Copié
+                            </div>
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
             ))}
@@ -311,4 +340,5 @@ export function ColorPaletteGenerator({
       </div>
     </div>
   );
-} 
+}
+ 
